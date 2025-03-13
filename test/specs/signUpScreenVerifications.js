@@ -32,7 +32,6 @@ async function main () {
   const signupErrorMessageContainer = await driver.$("id:ph.billeasev2.mobile:id/textinput_error");
 
 
-
   await chromeApp.click();
   await chromeAddressBar.click();
   await chromeAddressBar.addValue("billease.ph");

@@ -32,8 +32,6 @@ async function main () {
   const resetPasswordButton = await driver.$("id:ph.billeasev2.mobile:id/password_lock_reset");
 
 
-
-
   await chromeApp.click();
   await chromeAddressBar.click();
   await chromeAddressBar.addValue("billease.ph");
