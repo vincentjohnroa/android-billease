@@ -54,3 +54,68 @@ async function main () {
 }
 
 main().catch(console.log);
+
+
+// trying to put it in describe and it block
+// import { remote } from 'webdriverio';
+// import { expect } from 'expect-webdriverio';
+// import { describe, it, before, after } from 'mocha';
+
+// describe('Billease Android Mobile Field Verifications', () => {
+//     let driver;
+
+//     before(async () => {
+//         const desiredCapabilities = {
+//             "appium:automationName": "UiAutomator2",
+//             "appium:platformName": "Android",
+//             "appium:platformVersion": "14",
+//             "appium:deviceName": "R5CT81BV1WT",
+//             "appium:newCommandTimeout": 3600,
+//             "appium:connectHardwareKeyboard": true
+//         };
+//         driver = await remote({
+//             protocol: "http",
+//             hostname: "192.168.100.7",
+//             port: 4723,
+//             path: "/",
+//             capabilities: desiredCapabilities
+//         });
+//     });
+
+//     it('should validate redirection to forgot password screen and check field validation', async () => {
+//         const chromeApp = await driver.$("accessibility id:Chrome");
+//         const chromeAddressBar = await driver.$("id:com.android.chrome:id/url_bar");
+//         const billeaseLink = await driver.$("-android uiautomator:new UiSelector().text(\"billease.ph\").instance(0)");
+//         const hamburgerMenu = await driver.$("class name:android.widget.Button");
+//         const loginButton = await driver.$("accessibility id:LOG IN");
+//         const forgotPasswordLink = await driver.$("id:ph.billeasev2.mobile:id/forgot_password");
+//         const forgotPasswordEmailField = await driver.$("class name:android.widget.EditText");
+//         const forgotPasswordErrorMessageContainer = await driver.$("id:ph.billeasev2.mobile:id/textinput_error");
+//         const resetButton = await driver.$("id:ph.billeasev2.mobile:id/reset_password_reset");
+
+//         await chromeApp.click();
+//         await chromeAddressBar.click();
+//         await chromeAddressBar.addValue("billease.ph");
+//         await billeaseLink.click();
+//         await hamburgerMenu.click();
+//         await loginButton.click();
+//         await forgotPasswordLink.click();
+
+//         // no inputs
+//         await forgotPasswordEmailField.click();
+//         await forgotPasswordEmailField.clearValue();
+//         await expect(forgotPasswordErrorMessageContainer).toHaveText("Please enter a valid email or mobile number.");
+
+//         // email input only
+//         await forgotPasswordEmailField.click();
+//         await forgotPasswordEmailField.addValue("wahucroa@@gmail.com");
+//         await resetButton.click();
+//         await expect(forgotPasswordErrorMessageContainer).toHaveText("Please enter a valid email or mobile number.");
+//     });
+
+//     after(async () => {
+//         if (driver) {
+//             await driver.deleteSession();
+//         }
+//     });
+// });
