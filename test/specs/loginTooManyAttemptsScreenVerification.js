@@ -24,11 +24,12 @@ async function main () {
   const billeaseLink = await driver.$("-android uiautomator:new UiSelector().text(\"billease.ph\").instance(0)");
   const hamburgerMenu = await driver.$("class name:android.widget.Button");
   const loginButton = await driver.$("accessibility id:LOG IN");
-  const forgotPasswordLink = await driver.$("id:ph.billeasev2.mobile:id/forgot_password");
-  const forgotPasswordEmailField = await driver.$("class name:android.widget.EditText");
-  const forgotPasswordErrorMessageContainer = await driver.$("id:ph.billeasev2.mobile:id/textinput_error");
-  const resetButton = await driver.$("id:ph.billeasev2.mobile:id/reset_password_reset");
-
+  const usernameInputField = await driver.$("id:ph.billeasev2.mobile:id/input_username");
+  const mainLoginButton = await driver.$("id:ph.billeasev2.mobile:id/main_login");
+  const loginErrorMessageContainer = await driver.$("id:ph.billeasev2.mobile:id/textinput_error");
+  const passwordInputField = await driver.$("id:ph.billeasev2.mobile:id/input_password");
+  const accountLockedErrorMessage = await driver.$("id:ph.billeasev2.mobile:id/password_lock_title");
+  const resetPasswordButton = await driver.$("id:ph.billeasev2.mobile:id/password_lock_reset");
 
 
   await chromeApp.click();
@@ -38,22 +39,21 @@ async function main () {
   await hamburgerMenu.click();
   await loginButton.click();
 
-  await forgotPasswordLink.click();
+  // too many attempts
+  while (true) {
+    await mainLoginButton.click();
+    
+    try {
+        await expect(accountLockedErrorMessage).toHaveText("Account locked for 10 minutes", { timeout: 1000 });
+        break;
+    } catch (error) {
+
+    }
+  }
   
+  await expect(resetPasswordButton).toBeDisplayed();
 
-  // no inputs
-  await forgotPasswordEmailField.click();
-  await forgotPasswordEmailField.clearValue();
-  await expect(forgotPasswordErrorMessageContainer).toHaveText("Please enter a valid email or mobile number.");
-
-
-  // email input only
-  await forgotPasswordEmailField.click();
-  await forgotPasswordEmailField.addValue("wahucroa@@gmail.com");
-  await resetButton.click();
-  await expect(forgotPasswordErrorMessageContainer).toHaveText("Please enter a valid email or mobile number.");
-
-
+  
   await browser.closeWindow();
   await driver.deleteSession();
 }

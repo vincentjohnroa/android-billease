@@ -72,10 +72,7 @@ async function main () {
   await expect(mainSignUpButton).toBeDisabled();
 
 
-
-
-
-
+  await browser.closeWindow();
   await driver.deleteSession();
 }
 

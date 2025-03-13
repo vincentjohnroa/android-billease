@@ -72,11 +72,7 @@ async function main () {
   await expect(loginErrorMessageContainer).toHaveText("Please use correct username and password.");
 
 
-  // too many attempts
-  await expect(accountLockedErrorMessage).toHaveText("Account locked for 10 minutes");
-  await expect(resetPasswordButton).toBeDisplayed();
-
-
+  await browser.closeWindow();
   await driver.deleteSession();
 }
 
