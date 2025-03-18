@@ -1,121 +1,54 @@
-import {remote} from 'webdriverio';
-import { expect } from 'expect-webdriverio'
+import { remote } from 'webdriverio';
+import { describe, it } from 'mocha';
+import { ChromeScreen, LoginScreen, SignUpScreen, ForgotPasswordScreen } from '../pageObjects/elements.page.js';
+
+const chromeScreen = new ChromeScreen();
+const loginScreen = new LoginScreen();
+const signupScreen = new SignUpScreen();
+const forgotpasswordScreen = new ForgotPasswordScreen();
 
 
-async function main () {
-    const desired_capabilities = {
-        "appium:automationName": "UiAutomator2",
-        "appium:platformName": "Android",
-        "appium:platformVersion": "14",
-        "appium:deviceName": "R5CT81BV1WT",
-        "appium:newCommandTimeout": 3600,
-        "appium:connectHardwareKeyboard": true
-    }
-    const driver = await remote({
-        protocol: "http",
-        hostname: "192.168.100.7",
-        port: 4723,
-        path: "/",
-        capabilities: desired_capabilities
+describe('Billease Android Mobile Field Verifications', () => {
+    let driver;
+
+    before(async () => {
+        const desiredCapabilities = {
+            "appium:automationName": "UiAutomator2",
+            "appium:platformName": "Android",
+            "appium:platformVersion": "14",
+            "appium:deviceName": "R5CT81BV1WT",
+            "appium:newCommandTimeout": 3600,
+            "appium:connectHardwareKeyboard": true
+        };
+        driver = await remote({
+            protocol: "http",
+            hostname: "192.168.100.7",
+            port: 4723,
+            path: "/",
+            capabilities: desiredCapabilities
+        });
+
+        chromeScreen.setDriver(driver);
+        loginScreen.setDriver(driver);
+        signupScreen.setDriver(driver);
+        forgotpasswordScreen.setDriver(driver);
+
     });
 
-    const chromeApp = await driver.$("accessibility id:Chrome");
-    const chromeAddressBar = await driver.$("id:com.android.chrome:id/url_bar");
-    const billeaseLink = await driver.$("-android uiautomator:new UiSelector().text(\"billease.ph\").instance(0)");
-    const hamburgerMenu = await driver.$("class name:android.widget.Button");
-    const loginButton = await driver.$("accessibility id:LOG IN");
-    const forgotPasswordLink = await driver.$("id:ph.billeasev2.mobile:id/forgot_password");
-    const forgotPasswordEmailField = await driver.$("class name:android.widget.EditText");
-    const forgotPasswordErrorMessageContainer = await driver.$("id:ph.billeasev2.mobile:id/textinput_error");
-    const resetButton = await driver.$("id:ph.billeasev2.mobile:id/reset_password_reset");
+    it('should validate Email/Mobile fields on forgot password screen', async () => {
+        await chromeScreen.openChromeApp();
+        await chromeScreen.searchForBilleaseInChrome("billease.ph");
+        await chromeScreen.expandHamburgerMenuAndClickLogin();
+        await loginScreen.clickForgotPasswordLink();
 
+        await forgotpasswordScreen.clickResetWithoutInputs("Please enter a valid email or mobile number.");
+        await forgotpasswordScreen.clickResetWithEmailInputOnly("wahucroa@@gmail.com", "Please enter a valid email or mobile number.");
 
-    await chromeApp.click();
-    await chromeAddressBar.click();
-    await chromeAddressBar.addValue("billease.ph");
-    await billeaseLink.click();
-    await hamburgerMenu.click();
-    await loginButton.click();
+    });
 
-    await forgotPasswordLink.click();
-  
-    // no inputs
-    await forgotPasswordEmailField.click();
-    await forgotPasswordEmailField.clearValue();
-    await expect(forgotPasswordErrorMessageContainer).toHaveText("Please enter a valid email or mobile number.");
-
-    // email input only
-    await forgotPasswordEmailField.click();
-    await forgotPasswordEmailField.addValue("wahucroa@@gmail.com");
-    await resetButton.click();
-    await expect(forgotPasswordErrorMessageContainer).toHaveText("Please enter a valid email or mobile number.");
-
-    await driver.deleteSession();
-}
-
-main().catch(console.log);
-
-
-// trying to put it in describe and it block
-// import { remote } from 'webdriverio';
-// import { expect } from 'expect-webdriverio';
-// import { describe, it, before, after } from 'mocha';
-
-// describe('Billease Android Mobile Field Verifications', () => {
-//     let driver;
-
-//     before(async () => {
-//         const desiredCapabilities = {
-//             "appium:automationName": "UiAutomator2",
-//             "appium:platformName": "Android",
-//             "appium:platformVersion": "14",
-//             "appium:deviceName": "R5CT81BV1WT",
-//             "appium:newCommandTimeout": 3600,
-//             "appium:connectHardwareKeyboard": true
-//         };
-//         driver = await remote({
-//             protocol: "http",
-//             hostname: "192.168.100.7",
-//             port: 4723,
-//             path: "/",
-//             capabilities: desiredCapabilities
-//         });
-//     });
-
-//     it('should validate redirection to forgot password screen and check field validation', async () => {
-//         const chromeApp = await driver.$("accessibility id:Chrome");
-//         const chromeAddressBar = await driver.$("id:com.android.chrome:id/url_bar");
-//         const billeaseLink = await driver.$("-android uiautomator:new UiSelector().text(\"billease.ph\").instance(0)");
-//         const hamburgerMenu = await driver.$("class name:android.widget.Button");
-//         const loginButton = await driver.$("accessibility id:LOG IN");
-//         const forgotPasswordLink = await driver.$("id:ph.billeasev2.mobile:id/forgot_password");
-//         const forgotPasswordEmailField = await driver.$("class name:android.widget.EditText");
-//         const forgotPasswordErrorMessageContainer = await driver.$("id:ph.billeasev2.mobile:id/textinput_error");
-//         const resetButton = await driver.$("id:ph.billeasev2.mobile:id/reset_password_reset");
-
-//         await chromeApp.click();
-//         await chromeAddressBar.click();
-//         await chromeAddressBar.addValue("billease.ph");
-//         await billeaseLink.click();
-//         await hamburgerMenu.click();
-//         await loginButton.click();
-//         await forgotPasswordLink.click();
-
-//         // no inputs
-//         await forgotPasswordEmailField.click();
-//         await forgotPasswordEmailField.clearValue();
-//         await expect(forgotPasswordErrorMessageContainer).toHaveText("Please enter a valid email or mobile number.");
-
-//         // email input only
-//         await forgotPasswordEmailField.click();
-//         await forgotPasswordEmailField.addValue("wahucroa@@gmail.com");
-//         await resetButton.click();
-//         await expect(forgotPasswordErrorMessageContainer).toHaveText("Please enter a valid email or mobile number.");
-//     });
-
-//     after(async () => {
-//         if (driver) {
-//             await driver.deleteSession();
-//         }
-//     });
-// });
+    after(async () => {
+        if (driver) {
+            await driver.deleteSession();
+        }
+    });
+});
